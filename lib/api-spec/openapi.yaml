@@ -1,0 +1,487 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: transactions
+    description: Transaction operations
+  - name: friends
+    description: Friend/squad operations
+  - name: splits
+    description: Split expense operations
+  - name: dashboard
+    description: Dashboard summary operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /transactions:
+    get:
+      operationId: listTransactions
+      tags: [transactions]
+      summary: List all transactions
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+    post:
+      operationId: createTransaction
+      tags: [transactions]
+      summary: Create a transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTransactionBody"
+      responses:
+        "201":
+          description: Created transaction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+
+  /transactions/{id}:
+    get:
+      operationId: getTransaction
+      tags: [transactions]
+      summary: Get a transaction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Transaction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteTransaction
+      tags: [transactions]
+      summary: Delete a transaction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /friends:
+    get:
+      operationId: listFriends
+      tags: [friends]
+      summary: List friends/squad members
+      responses:
+        "200":
+          description: List of friends
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Friend"
+    post:
+      operationId: createFriend
+      tags: [friends]
+      summary: Add a friend
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFriendBody"
+      responses:
+        "201":
+          description: Created friend
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Friend"
+
+  /leaderboard:
+    get:
+      operationId: getLeaderboard
+      tags: [friends]
+      summary: Get squad leaderboard by frugality score
+      responses:
+        "200":
+          description: Leaderboard rankings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LeaderboardEntry"
+
+  /splits:
+    get:
+      operationId: listSplits
+      tags: [splits]
+      summary: List all splits
+      responses:
+        "200":
+          description: List of splits
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Split"
+    post:
+      operationId: createSplit
+      tags: [splits]
+      summary: Create a split expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSplitBody"
+      responses:
+        "201":
+          description: Created split
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Split"
+
+  /splits/{id}/settle:
+    post:
+      operationId: settleSplit
+      tags: [splits]
+      summary: Mark a split as settled
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Settled split
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Split"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/recent:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Get recent transactions with squad context
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        amount:
+          type: number
+        category:
+          type: string
+        emoji:
+          type: string
+        isSquad:
+          type: boolean
+        splitWith:
+          type: integer
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        vibe:
+          type: string
+          nullable: true
+          description: "User vibe label e.g. WORTH IT, GUILTY, VITAL"
+      required:
+        - id
+        - title
+        - amount
+        - category
+        - emoji
+        - isSquad
+        - createdAt
+
+    CreateTransactionBody:
+      type: object
+      properties:
+        title:
+          type: string
+        amount:
+          type: number
+        category:
+          type: string
+        emoji:
+          type: string
+        isSquad:
+          type: boolean
+        splitWith:
+          type: integer
+          nullable: true
+        vibe:
+          type: string
+          nullable: true
+      required:
+        - title
+        - amount
+        - category
+        - emoji
+        - isSquad
+
+    Friend:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+        avatarColor:
+          type: string
+        upiId:
+          type: string
+          nullable: true
+        frugalityScore:
+          type: integer
+        totalOwed:
+          type: number
+          description: Amount they owe you (negative = you owe them)
+      required:
+        - id
+        - name
+        - username
+        - avatarColor
+        - frugalityScore
+        - totalOwed
+
+    CreateFriendBody:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        avatarColor:
+          type: string
+        upiId:
+          type: string
+          nullable: true
+      required:
+        - name
+        - username
+        - avatarColor
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+        friendId:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+        avatarColor:
+          type: string
+        frugalityScore:
+          type: integer
+        badge:
+          type: string
+          nullable: true
+          description: "e.g. SQUAD LEAD, BALLER, ECO-WARRIOR"
+        isCurrentUser:
+          type: boolean
+      required:
+        - rank
+        - friendId
+        - name
+        - username
+        - avatarColor
+        - frugalityScore
+        - isCurrentUser
+
+    Split:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        totalAmount:
+          type: number
+        splitType:
+          type: string
+          enum: [equal, custom]
+        participants:
+          type: array
+          items:
+            $ref: "#/components/schemas/SplitParticipant"
+        settled:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        upiMethod:
+          type: string
+          nullable: true
+          enum: [phonepe, gpay, paytm]
+      required:
+        - id
+        - title
+        - totalAmount
+        - splitType
+        - participants
+        - settled
+        - createdAt
+
+    SplitParticipant:
+      type: object
+      properties:
+        friendId:
+          type: integer
+        name:
+          type: string
+        amountOwed:
+          type: number
+        settled:
+          type: boolean
+      required:
+        - friendId
+        - name
+        - amountOwed
+        - settled
+
+    CreateSplitBody:
+      type: object
+      properties:
+        title:
+          type: string
+        totalAmount:
+          type: number
+        splitType:
+          type: string
+          enum: [equal, custom]
+        participantIds:
+          type: array
+          items:
+            type: integer
+        upiMethod:
+          type: string
+          nullable: true
+          enum: [phonepe, gpay, paytm]
+      required:
+        - title
+        - totalAmount
+        - splitType
+        - participantIds
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalBalance:
+          type: number
+        weeklySpend:
+          type: number
+        weeklySpendChange:
+          type: number
+          description: Percentage change from last week
+        burnRate:
+          type: string
+          enum: [CHILL, WARM, HOT, FIRE]
+        savingsStreakDays:
+          type: integer
+        topSpenderRank:
+          type: integer
+          nullable: true
+        totalOwed:
+          type: number
+          description: Total amount others owe you across all splits
+      required:
+        - totalBalance
+        - weeklySpend
+        - weeklySpendChange
+        - burnRate
+        - savingsStreakDays
+        - totalOwed
