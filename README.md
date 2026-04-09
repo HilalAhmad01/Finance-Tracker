@@ -13,7 +13,9 @@
 ![scoreboard Screenshot](https://github.com/HilalAhmad01/Finance-Tracker/blob/main/Screenshot%20from%202026-04-09%2021-00-15.png)
 
 ![Scoreboard Screenshot](https://github.com/HilalAhmad01/Finance-Tracker/blob/main/Screenshot%20from%202026-04-09%2021-00-33.png)
+
 ![Scoreboard Screenshot](https://github.com/HilalAhmad01/Finance-Tracker/blob/main/Screenshot%20from%202026-04-09%2021-00-51.png)
+
 ![Scoreboard Screenshot](https://github.com/HilalAhmad01/Finance-Tracker/blob/main/Screenshot%20from%202026-04-09%2021-01-07.png)
 
 ---
