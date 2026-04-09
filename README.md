@@ -8,6 +8,14 @@
 
 **CashFlow** isn't your parents' spreadsheet. It’s a high-octane, privacy-first personal finance tracker designed for the fast-paced Gen Z lifestyle. Split bills with the squad, track your spending, and see exactly where your money is ghosting you—all in one place.
 
+![Scoreboard Screenshot](https://github.com/HilalAhmad01/Finance-Tracker/blob/main/Screenshot%20from%202026-04-09%2021-00-00.png)
+
+![scoreboard Screenshot](https://github.com/HilalAhmad01/Finance-Tracker/blob/main/Screenshot%20from%202026-04-09%2021-00-15.png)
+
+![Scoreboard Screenshot](https://github.com/HilalAhmad01/Finance-Tracker/blob/main/Screenshot%20from%202026-04-09%2021-00-33.png)
+![Scoreboard Screenshot](https://github.com/HilalAhmad01/Finance-Tracker/blob/main/Screenshot%20from%202026-04-09%2021-00-51.png)
+![Scoreboard Screenshot](https://github.com/HilalAhmad01/Finance-Tracker/blob/main/Screenshot%20from%202026-04-09%2021-01-07.png)
+
 ---
 
 ## ✨ Key Features
